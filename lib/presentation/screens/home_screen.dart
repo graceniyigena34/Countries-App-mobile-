@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/country_list_cubit.dart';
 import '../bloc/country_list_state.dart';
+import '../bloc/theme_cubit.dart';
 import '../widgets/country_list_item.dart';
 import '../widgets/shimmer_loading.dart';
 import 'country_details_screen.dart';
@@ -35,6 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Countries'),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: Icon(context.watch<ThemeCubit>().state ? Icons.light_mode : Icons.dark_mode),
+            onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -49,7 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 filled: true,
-                fillColor: Colors.grey[100],
               ),
               onChanged: (value) {
                 context.read<CountryListCubit>().searchCountries(value);
