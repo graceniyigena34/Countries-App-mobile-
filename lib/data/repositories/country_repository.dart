@@ -15,6 +15,14 @@ class CountryRepository {
       return (response.data as List)
           .map((json) => CountrySummary.fromJson(json))
           .toList();
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout || 
+          e.type == DioExceptionType.receiveTimeout) {
+        throw Exception('Connection timeout. Please check your internet.');
+      } else if (e.type == DioExceptionType.connectionError) {
+        throw Exception('No internet connection. Please check your network.');
+      }
+      throw Exception('Failed to load countries. Please try again.');
     } catch (e) {
       throw Exception('Failed to load countries: $e');
     }
