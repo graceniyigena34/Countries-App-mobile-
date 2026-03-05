@@ -37,6 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         actions: [
+          PopupMenuButton<SortType>(
+            icon: const Icon(Icons.sort),
+            onSelected: (sortType) => context.read<CountryListCubit>().sortCountries(sortType),
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: SortType.nameAsc, child: Text('Name (A-Z)')),
+              const PopupMenuItem(value: SortType.nameDesc, child: Text('Name (Z-A)')),
+              const PopupMenuItem(value: SortType.populationAsc, child: Text('Population (Low-High)')),
+              const PopupMenuItem(value: SortType.populationDesc, child: Text('Population (High-Low)')),
+            ],
+          ),
           IconButton(
             icon: Icon(context.watch<ThemeCubit>().state ? Icons.light_mode : Icons.dark_mode),
             onPressed: () => context.read<ThemeCubit>().toggleTheme(),

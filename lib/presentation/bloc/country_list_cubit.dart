@@ -1,11 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/country_repository.dart';
 import '../../data/repositories/favorites_repository.dart';
+import '../../data/models/country_summary.dart';
 import 'country_list_state.dart';
 
 class CountryListCubit extends Cubit<CountryListState> {
   final CountryRepository countryRepository;
   final FavoritesRepository favoritesRepository;
+  List<CountrySummary> _allCountries = [];
 
   CountryListCubit(this.countryRepository, this.favoritesRepository) 
       : super(CountryListInitial());
@@ -13,9 +15,9 @@ class CountryListCubit extends Cubit<CountryListState> {
   Future<void> loadCountries() async {
     emit(CountryListLoading());
     try {
-      final countries = await countryRepository.getAllCountries();
+      _allCountries = await countryRepository.getAllCountries();
       final favorites = await favoritesRepository.getFavorites();
-      emit(CountryListLoaded(countries, favorites));
+      emit(CountryListLoaded(_allCountries, favorites));
     } catch (e) {
       emit(CountryListError(e.toString()));
     }
@@ -47,7 +49,31 @@ class CountryListCubit extends Cubit<CountryListState> {
         await favoritesRepository.addFavorite(cca2);
       }
       final favorites = await favoritesRepository.getFavorites();
-      emit(CountryListLoaded(currentState.countries, favorites));
+      emit(CountryListLoaded(currentState.countries, favorites, sortType: currentState.sortType));
+    }
+  }
+
+  void sortCountries(SortType sortType) {
+    final currentState = state;
+    if (currentState is CountryListLoaded) {
+      final sorted = List<CountrySummary>.from(currentState.countries);
+      switch (sortType) {
+        case SortType.nameAsc:
+          sorted.sort((a, b) => a.name.compareTo(b.name));
+          break;
+        case SortType.nameDesc:
+          sorted.sort((a, b) => b.name.compareTo(a.name));
+          break;
+        case SortType.populationAsc:
+          sorted.sort((a, b) => a.population.compareTo(b.population));
+          break;
+        case SortType.populationDesc:
+          sorted.sort((a, b) => b.population.compareTo(a.population));
+          break;
+        case SortType.none:
+          break;
+      }
+      emit(CountryListLoaded(sorted, currentState.favorites, sortType: sortType));
     }
   }
 }
