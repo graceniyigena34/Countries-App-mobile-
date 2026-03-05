@@ -46,18 +46,21 @@ class FavoritesScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: Image.network(
-                        country.flag,
-                        width: 60,
-                        height: 40,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                    leading: Hero(
+                      tag: 'flag_${country.cca2}',
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: Image.network(
+                          country.flag,
                           width: 60,
                           height: 40,
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.flag),
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            width: 60,
+                            height: 40,
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.flag),
+                          ),
                         ),
                       ),
                     ),

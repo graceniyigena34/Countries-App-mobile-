@@ -41,16 +41,19 @@ class CountryDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.network(
-                      country.flag,
-                      width: double.infinity,
-                      height: 200,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
+                    Hero(
+                      tag: 'flag_$cca2',
+                      child: Image.network(
+                        country.flag,
                         width: double.infinity,
                         height: 200,
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.flag, size: 64),
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          width: double.infinity,
+                          height: 200,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.flag, size: 64),
+                        ),
                       ),
                     ),
                     Padding(
